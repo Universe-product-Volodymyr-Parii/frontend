@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import type { Product, ProductsPagination, ProductsResponse } from "../types/products.types";
+import { useCallback, useEffect, useState } from "react";
+import type { Product, ProductsPagination } from "../types/products.types";
+import { getProducts } from "../services/products.service";
 
-const apiUrl = import.meta.env.VITE_API_URL;
 const initialPagination: ProductsPagination = {
   hasNextPage: false,
   limit: 15,
@@ -15,6 +15,8 @@ export const useGetProducts = (limit: number = 15) => {
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<ProductsPagination>(initialPagination);
 
+  const fetchProducts = useCallback(async (signal?: AbortSignal) => getProducts(limit, undefined, signal), [limit]);
+
   useEffect(() => {
     const controller = new AbortController();
 
@@ -22,16 +24,7 @@ export const useGetProducts = (limit: number = 15) => {
       try {
         setIsLoading(true);
         setError(null);
-
-        const response = await fetch(`${apiUrl}/products?limit=${limit}`, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
-
-        const result = (await response.json()) as ProductsResponse;
+        const result = await fetchProducts(controller.signal);
 
         setProducts(result.data);
         setPagination(result.pagination);
@@ -49,7 +42,7 @@ export const useGetProducts = (limit: number = 15) => {
     loadProducts();
 
     return () => controller.abort();
-  }, [limit]);
+  }, [fetchProducts]);
 
   const loadMore = async () => {
     if (!pagination.hasNextPage || pagination.nextCursor === null) return;
@@ -57,14 +50,7 @@ export const useGetProducts = (limit: number = 15) => {
     try {
       setIsLoadingMore(true);
       setError(null);
-
-      const response = await fetch(`${apiUrl}/products?limit=${limit}&cursor=${pagination.nextCursor}`);
-
-      if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
-      }
-
-      const result = (await response.json()) as ProductsResponse;
+      const result = await getProducts(limit, pagination.nextCursor);
 
       setProducts((currentProducts) => [...currentProducts, ...result.data]);
       setPagination(result.pagination);
@@ -75,6 +61,30 @@ export const useGetProducts = (limit: number = 15) => {
     }
   };
 
+  const refreshProducts = async () => {
+    try {
+      setIsLoadingMore(true);
+      setError(null);
+
+      const result = await fetchProducts();
+
+      setProducts(result.data);
+      setPagination(result.pagination);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unexpected error");
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
+  const removeProduct = (productId: number) => {
+    setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
+  };
+
+  const addProduct = (product: Product) => {
+    setProducts((currentProducts) => [...currentProducts, product]);
+  };
+
   return {
     products,
     isLoading,
@@ -82,5 +92,8 @@ export const useGetProducts = (limit: number = 15) => {
     error,
     hasNextPage: pagination.hasNextPage,
     loadMore,
+    refreshProducts,
+    removeProduct,
+    addProduct,
   };
 };

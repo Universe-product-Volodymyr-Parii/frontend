@@ -18,7 +18,7 @@ export function ProductsState({ isLoading, error, isEmpty }: ProductsStateProps)
   if (isEmpty) {
     return (
       <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-6 text-slate-300">
-        The request succeeded, but product list empty.
+        No products yet. Create your first product.
       </div>
     );
   }

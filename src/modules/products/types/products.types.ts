@@ -5,6 +5,12 @@ export type Product = {
   price: string;
 };
 
+export type CreateProductPayload = {
+  name: string;
+  description?: string;
+  price: number;
+};
+
 export type ProductsPagination = {
   hasNextPage: boolean;
   limit: number;
