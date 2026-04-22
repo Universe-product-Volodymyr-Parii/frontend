@@ -5,11 +5,13 @@ export type Product = {
   price: string;
 };
 
+export type ProductsPagination = {
+  hasNextPage: boolean;
+  limit: number;
+  nextCursor: number | null;
+};
+
 export type ProductsResponse = {
   data: Product[];
-  pagination: {
-    hasNextPage: boolean;
-    limit: number;
-    nextCursor: number | null;
-  };
+  pagination: ProductsPagination;
 };

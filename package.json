@@ -7,7 +7,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
+    "prepare": "husky",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -25,9 +29,24 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.4.2",
     "tailwindcss": "^4.2.4",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.9"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx,js,jsx,cjs,mjs}": [
+      "eslint --max-warnings 0 --fix",
+      "prettier --log-level warn --cache --write"
+    ],
+    "src/**/*.{json,yml,scss,css}": [
+      "prettier --log-level warn --cache --write"
+    ],
+    "*.{json,yml,yaml}": [
+      "prettier --log-level warn --cache --write"
+    ]
   }
 }
