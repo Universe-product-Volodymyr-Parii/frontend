@@ -74,11 +74,11 @@ export function CreateProductDialog({
           <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
             <ProductFormFields register={register} errors={errors} />
 
-            {submitError ? (
+            {submitError && (
               <div className="rounded-2xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
                 {submitError}
               </div>
-            ) : null}
+            )}
 
             <div className="flex justify-end gap-3 pt-2">
               <button

@@ -90,6 +90,46 @@ export function ProductsSection() {
     setHasPendingCreatedProducts(false);
   };
 
+  const renderFooterAction = () => {
+    if (isLoading || error) {
+      return null;
+    }
+
+    if (hasNextPage) {
+      return (
+        <button
+          type="button"
+          onClick={loadMore}
+          disabled={isLoadingMore}
+          className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:border-cyan-300/50 hover:bg-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isLoadingMore ? "Loading..." : "Load more products"}
+        </button>
+      );
+    }
+
+    if (hasPendingCreatedProducts) {
+      return (
+        <button
+          type="button"
+          onClick={handleRefreshProducts}
+          disabled={isLoadingMore}
+          className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:border-cyan-300/50 hover:bg-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isLoadingMore ? "Loading..." : "Load new products"}
+        </button>
+      );
+    }
+
+    if (hasProducts) {
+      return <div className="text-sm text-slate-400">All products are loaded.</div>;
+    }
+
+    return null;
+  };
+
+  const footerAction = renderFooterAction();
+
   return (
     <>
       <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
@@ -109,33 +149,9 @@ export function ProductsSection() {
 
         <ProductsState isLoading={isLoading} error={error} isEmpty={isEmpty} />
 
-        {hasProducts ? <ProductsList products={products} onDelete={openDeleteDialog} /> : null}
+        {hasProducts && <ProductsList products={products} onDelete={openDeleteDialog} />}
 
-        {!isLoading && !error ? (
-          <div className="mt-6 flex justify-center">
-            {hasNextPage ? (
-              <button
-                type="button"
-                onClick={loadMore}
-                disabled={isLoadingMore}
-                className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:border-cyan-300/50 hover:bg-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {isLoadingMore ? "Loading..." : "Load more products"}
-              </button>
-            ) : hasPendingCreatedProducts ? (
-              <button
-                type="button"
-                onClick={handleRefreshProducts}
-                disabled={isLoadingMore}
-                className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:border-cyan-300/50 hover:bg-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {isLoadingMore ? "Loading..." : "Load new products"}
-              </button>
-            ) : hasProducts ? (
-              <div className="text-sm text-slate-400">All products are loaded.</div>
-            ) : null}
-          </div>
-        ) : null}
+        {footerAction && <div className="mt-6 flex justify-center">{footerAction}</div>}
       </section>
 
       <CreateProductDialog

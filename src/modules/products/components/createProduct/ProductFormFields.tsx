@@ -21,7 +21,7 @@ export function ProductFormFields({ register, errors }: ProductFormFieldsProps) 
           className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400/60"
           placeholder="MacBook Pro"
         />
-        {errors.name ? <span className="mt-2 block text-sm text-rose-300">{errors.name.message}</span> : null}
+        {errors.name && <span className="mt-2 block text-sm text-rose-300">{errors.name.message}</span>}
       </label>
 
       <label className="block">
@@ -32,9 +32,7 @@ export function ProductFormFields({ register, errors }: ProductFormFieldsProps) 
           className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400/60 resize-none"
           placeholder="14-inch laptop"
         />
-        {errors.description ? (
-          <span className="mt-2 block text-sm text-rose-300">{errors.description.message}</span>
-        ) : null}
+        {errors.description && <span className="mt-2 block text-sm text-rose-300">{errors.description.message}</span>}
       </label>
 
       <label className="block">
@@ -47,7 +45,7 @@ export function ProductFormFields({ register, errors }: ProductFormFieldsProps) 
           className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400/60"
           placeholder="1999.99"
         />
-        {errors.price ? <span className="mt-2 block text-sm text-rose-300">{errors.price.message}</span> : null}
+        {errors.price && <span className="mt-2 block text-sm text-rose-300">{errors.price.message}</span>}
       </label>
     </>
   );

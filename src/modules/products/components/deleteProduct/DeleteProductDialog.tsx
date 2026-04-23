@@ -43,11 +43,11 @@ export function DeleteProductDialog({
             Are you sure you want to remove <span className="font-medium text-white">{product?.name}</span>?
           </p>
 
-          {deleteError ? (
+          {deleteError && (
             <div className="mt-4 rounded-2xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
               {deleteError}
             </div>
-          ) : null}
+          )}
 
           <div className="mt-6 flex justify-end gap-3">
             <button
