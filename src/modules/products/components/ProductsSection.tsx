@@ -20,7 +20,7 @@ export function ProductsSection() {
     error,
     hasNextPage,
     loadMore,
-    refreshProducts,
+    loadNewProducts,
     removeProduct,
     addProduct,
   } = useGetProducts();
@@ -86,7 +86,7 @@ export function ProductsSection() {
   };
 
   const handleRefreshProducts = async () => {
-    await refreshProducts();
+    await loadNewProducts();
     setHasPendingCreatedProducts(false);
   };
 

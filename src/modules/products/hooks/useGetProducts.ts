@@ -77,6 +77,29 @@ export const useGetProducts = (limit: number = 15) => {
     }
   };
 
+  const loadNewProducts = async () => {
+    const lastProductId = products.at(-1)?.id;
+
+    if (lastProductId === undefined) {
+      await refreshProducts();
+      return;
+    }
+
+    try {
+      setIsLoadingMore(true);
+      setError(null);
+
+      const result = await getProducts(limit, lastProductId);
+
+      setProducts((currentProducts) => [...currentProducts, ...result.data]);
+      setPagination(result.pagination);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unexpected error");
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
   const removeProduct = (productId: number) => {
     setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
   };
@@ -93,6 +116,7 @@ export const useGetProducts = (limit: number = 15) => {
     hasNextPage: pagination.hasNextPage,
     loadMore,
     refreshProducts,
+    loadNewProducts,
     removeProduct,
     addProduct,
   };
